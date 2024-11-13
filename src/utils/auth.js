@@ -2,7 +2,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import prisma from "./connect";
-import { getServerSession  } from "next-auth";
+import { getServerSession  } from "next-auth/next";
 
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
@@ -17,22 +17,14 @@ export const authOptions = {
     }),
   ],
   logger: {
-    error(code, metadata) {
-      log.error(code, metadata)
-    },
-    warn(code) {
-      log.warn(code)
-    },
-    debug(code, metadata) {
-      log.debug(code, metadata)
-    }
+
   }
 };
 
-// export const getAuthSession = () => getServerSession(authOptions);
+export const getAuthSession = () => getServerSession(authOptions);
 
-export function getAuthSession(
-  ...args
-) {
-  return getServerSession(...args, config)
-}
+// export function getAuthSession(
+//   ...args
+// ) {
+//   return getServerSession(...args, config)
+// }
