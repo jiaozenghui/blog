@@ -2,6 +2,9 @@ import NextAuth from "next-auth"
 import CredentialsProvider from 'next-auth/providers/credentials'
 import {getUser} from "../../../request/modules/userReq";
 
+
+origin  git@gitee.com:lin_30_0/com-admin.git (push)
+
 //配置next-auth，参考https://next-auth.js.org/configuration/options
 export default NextAuth({
     // provider配置凭证登录
