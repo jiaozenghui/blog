@@ -3,11 +3,12 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true
   },
+  
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'lovely-flamingo-139.convex.cloud'
+        hostname: 'static.imooc-lego.com'
       },
       {
         protocol: 'https',

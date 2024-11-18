@@ -1,13 +1,15 @@
 "use client";
 import PodcastCard from '@/components/PodcastCard'
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import LoaderSpinner from '@/components/LoaderSpinner';
+import useFetch from "@/common/hooks/useFetch";
+import axios from "@axios";
+import { articleListItemType } from '@/types/article';
 
 const Home = () => {
-  const trendingPodcasts = useQuery(api.podcasts.getTrendingPodcasts);
-
-  if(!trendingPodcasts) return <LoaderSpinner />
+  let { data, isLoading } = useFetch<articleListItemType[], any>(() =>
+    axios.get("/api/works/templist").then((res) => res.data.data.list),
+  );
+  if(isLoading) return <LoaderSpinner />
   
   return (
     <div className="mt-9 flex flex-col gap-9 md:overflow-hidden">
@@ -15,13 +17,13 @@ const Home = () => {
         <h1 className="text-20 font-bold text-white-1">Trending Podcasts</h1>
 
         <div className="podcast_grid">
-          {trendingPodcasts?.map(({ _id, podcastTitle, podcastDescription, imageUrl }) => (
+          {data?.map(({ id, title, desc, coverImg}) => (
             <PodcastCard 
-              key={_id}
-              imgUrl={imageUrl as string}
-              title={podcastTitle}
-              description={podcastDescription}
-              podcastId={_id}
+              key={id}
+              imgUrl={coverImg as string}
+              title={title}
+              description={desc}
+              podcastId={id}
             />
           ))}
         </div>

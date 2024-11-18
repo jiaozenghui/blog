@@ -1,8 +1,9 @@
-import axiosPlugin from "axios";
+import axios, { type AxiosRequestConfig } from 'axios'
 import cookie from "js-cookie";
 
-// 创建 axios 实例
-const apiClient = axiosPlugin.create({
+
+
+const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
@@ -24,13 +25,16 @@ apiClient.interceptors.request.use(
 // 响应拦截器
 apiClient.interceptors.response.use(
   (response) => {
-    /**访问成功**/
+    if (response.status !== 200) return Promise.reject(response.data)
+
     return response;
   },
   (error) => {
-    if (axiosPlugin.isCancel(error)) {
+    if (axios.isCancel(error)) {
       return new Promise(() => {}); // 返回一个空 Promise 取消请求不触发 catch
     }
+    Promise.reject(error.response)
+
     return Promise.reject({
       ...error.response?.data,
       status: error.response?.status,
@@ -38,4 +42,5 @@ apiClient.interceptors.response.use(
   },
 );
 
-export default apiClient;
+
+export default apiClient
