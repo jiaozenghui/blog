@@ -28,7 +28,7 @@ const RightSidebar = () => {
         <Link href={`/profile/${user?.id}`} className="flex gap-3 pb-12">
           <UserButton />
           <div className="flex w-full items-center justify-between">
-            <h1 className="text-16 truncate font-semibold text-white-1">{user?.firstName} {user?.lastName}</h1>
+            <h1 className="text-16 truncate font-semibold  ">{user?.firstName} {user?.lastName}</h1>
             <Image 
               src="/icons/right-arrow.svg"
               alt="arrow"
@@ -55,10 +55,10 @@ const RightSidebar = () => {
                   height={44}
                   className="aspect-square rounded-lg"
                 />
-                <h2 className="text-14 font-semibold text-white-1">{podcaster.name}</h2>
+                <h2 className="text-14 font-semibold  ">{podcaster.name}</h2>
               </figure>
               <div className="flex items-center">
-                <p className="text-12 font-normal text-white-1">{podcaster.totalPodcasts} podcasts</p>
+                <p className="text-12 font-normal  ">{podcaster.totalPodcasts} podcasts</p>
               </div> 
             </div>
           ))}

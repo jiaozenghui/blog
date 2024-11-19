@@ -70,7 +70,7 @@ const PodcastDetailPlayer = ({
         />
         <div className="flex w-full flex-col gap-5 max-md:items-center md:gap-9">
           <article className="flex flex-col gap-2 max-md:items-center">
-            <h1 className="text-32 font-extrabold tracking-[-0.32px] text-white-1">
+            <h1 className="text-32 font-extrabold tracking-[-0.32px]  ">
               {podcastTitle}
             </h1>
             <figure
@@ -92,7 +92,7 @@ const PodcastDetailPlayer = ({
 
           <Button
             onClick={handlePlay}
-            className="text-16 w-full max-w-[250px] bg-orange-1 font-extrabold text-white-1"
+            className="text-16 w-full max-w-[250px] bg-orange-1 font-extrabold  "
           >
             <Image
               src="/icons/Play.svg"
@@ -125,7 +125,7 @@ const PodcastDetailPlayer = ({
                 height={16}
                 alt="Delete icon"
               />
-              <h2 className="text-16 font-normal text-white-1">Delete</h2>
+              <h2 className="text-16 font-normal  ">Delete</h2>
             </div>
           )}
         </div>

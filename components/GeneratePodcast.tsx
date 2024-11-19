@@ -76,7 +76,7 @@ const GeneratePodcast = (props: GeneratePodcastProps) => {
   return (
     <div>
       <div className="flex flex-col gap-2.5">
-        <Label className="text-16 font-bold text-white-1">
+        <Label className="text-16 font-bold  ">
           AI Prompt to generate Podcast
         </Label>
         <Textarea 
@@ -88,7 +88,7 @@ const GeneratePodcast = (props: GeneratePodcastProps) => {
         />
       </div>
       <div className="mt-5 w-full max-w-[200px]">
-      <Button type="submit" className="text-16 bg-orange-1 py-4 font-bold text-white-1" onClick={generatePodcast}>
+      <Button type="submit" className="text-16 bg-orange-1 py-4 font-bold  " onClick={generatePodcast}>
         {isGenerating ? (
           <>
             Generating

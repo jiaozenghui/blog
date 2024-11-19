@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
+import Navbar from "@/components/Navbar";
+import { ThemeProvider } from "@/components/ThemeProvider"
 import "./globals.css";
 
 import AudioProvider from "@/providers/AudioProvider";
@@ -21,11 +23,23 @@ export default function RootLayout({
 }>) {
   return (
       <html lang="en">
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
         <AudioProvider>
-          <body className={`${manrope.className}`}>
-              {children}
-          </body>
+
+            <body className={`${manrope.className}`}>
+            
+                <Navbar />
+                {children}
+                
+            </body>
+          
         </AudioProvider>
+        </ThemeProvider>
       </html>
   );
 }

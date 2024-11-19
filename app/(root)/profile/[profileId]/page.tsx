@@ -37,7 +37,7 @@ const ProfilePage = ({
         />
       </div>
       <section className="mt-9 flex flex-col gap-5">
-        <h1 className="text-20 font-bold text-white-1">All Podcasts</h1>
+        <h1 className="text-20 font-bold  ">All Podcasts</h1>
         {podcastsData && podcastsData.podcasts.length > 0 ? (
           <div className="podcast_grid">
             {podcastsData?.podcasts
