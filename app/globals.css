@@ -145,3 +145,7 @@ html {
 .cl-internal-wkkub3 {
   color: #f97535;
 }
+
+.max-w-8xl {
+  max-width: 90rem;
+}
