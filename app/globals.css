@@ -20,7 +20,10 @@ html {
     @apply grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4;
   }
   .right_sidebar {
-    @apply sticky right-0 top-0 flex w-[310px] flex-col overflow-y-hidden border-none  px-[30px] pt-8 max-xl:hidden;
+    @apply sticky right-0 top-0 flex w-[310px] flex-col overflow-y-auto border-none  pl-[20px] pt-4 max-xl:hidden; -ms-overflow-style: none;
+      /* IE 和 Edge */
+      scrollbar-width: none;
+      /* Firefox */
   }
   .left_sidebar {
     @apply sticky left-0 top-0 flex w-fit flex-col  justify-between  border-none   pt-8   max-md:hidden lg:w-[270px] lg:pl-8;
