@@ -20,12 +20,10 @@ const CardList = async ({ page, cat }: any) => {
   // const hasNext = POST_PER_PAGE * (page - 1) + POST_PER_PAGE < count;
 
   return (
-    <div className={styles.container}>
-      <div className={styles.posts}>
+    <div className='grid  gap-y-4 ' >
         {data?.data?.list?.map((item: any) => (
           <Card item={item} key={item._id} />
         ))}
-      </div>
     </div>
   );
 };
