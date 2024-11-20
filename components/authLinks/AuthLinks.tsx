@@ -36,16 +36,16 @@ const AuthLinks = () => {
       )}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button
-            className="hidden md:block text-center"
-            variant="outline"
-            size="icon"
-          >
+          <Button className="flex md:hidden " size="icon">
             <User className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem>Write</DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href="/docs" legacyBehavior passHref>
+              Write
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem>LogOut</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
