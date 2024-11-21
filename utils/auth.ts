@@ -1,7 +1,7 @@
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import NextAuth, { getServerSession, type User } from "next-auth";
+import { getServerSession, type User } from "next-auth";
 
 export const authOptions = {
   providers: [
@@ -14,12 +14,14 @@ export const authOptions = {
       clientSecret: process.env.GITHUB_SECRET as string,
     }),
     CredentialsProvider({
-      name: "Credentials",
+      name: "credentials",
       credentials: {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        console.log('8888888888888888')
+        console.log(credentials)
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
@@ -75,9 +77,5 @@ export const authOptions = {
     signIn: "/",
   },
 };
-
-const handler = NextAuth(authOptions);
-
-export { handler as GET, handler as POST };
 
 export const getAuthSession = () => getServerSession(authOptions);

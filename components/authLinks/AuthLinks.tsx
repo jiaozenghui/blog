@@ -5,7 +5,7 @@ import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { User } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import className from "classnames";
+import { useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,9 +15,13 @@ import {
 
 const AuthLinks = () => {
   const [open, setOpen] = useState(false);
-
+  const router = useRouter();
   const { status } = useSession();
-
+  const Logout = async () => {
+    await signOut()
+    const { status } = useSession();
+    router.push('/sign-in')
+  }
   return (
     <>
       {status === "authenticated" ? (
@@ -25,7 +29,7 @@ const AuthLinks = () => {
           <Link href="/write" className={styles.link}>
             Write
           </Link>
-          <span className={styles.link} onClick={() => signOut}>
+          <span className={styles.link} onClick={() => Logout()}>
             Logout
           </span>
         </>

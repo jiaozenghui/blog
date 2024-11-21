@@ -32,7 +32,7 @@ export function FriendshipLink({ className, ...props }: CardProps) {
   return (
     <Card className={cn(className)} {...props}>
       <CardHeader>
-        <CardTitle>Friendship link</CardTitle>
+        <CardTitle className="text-lg">Friendship link</CardTitle>
       </CardHeader>
       <CardContent className="grid gap-4">
         <div>

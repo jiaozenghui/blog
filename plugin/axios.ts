@@ -2,7 +2,7 @@ import axios, { type AxiosRequestConfig } from "axios";
 import cookie from "js-cookie";
 
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: process.env.API_BASE_URL,
 });
 
 type Fn = (data: FcResponse<any>) => unknown;

@@ -32,7 +32,7 @@ export function PopularTags({ className, ...props }: CardProps) {
   return (
     <Card className={cn(className)} {...props}>
       <CardHeader>
-        <CardTitle>Popular Tags</CardTitle>
+        <CardTitle className="text-lg">Popular Tags</CardTitle>
       </CardHeader>
       <CardContent className="grid gap-4">
         <div>
