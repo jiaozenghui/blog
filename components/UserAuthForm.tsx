@@ -57,18 +57,13 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     },
   })
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    debugger
     setIsLoading(true)
-    console.log('sdfgdfgdfbfdf')
     const result = await signIn('credentials', {
       redirect: false,
       email: values.email,
       password: values.password,
     })
-    console.log('999999999999999')
-    console.log(result)
     if (result?.error) {
-      console.log('result', result);
       if (result.error === 'CredentialsSignin') {
         toast({
           title: '邮箱或密码不正确',

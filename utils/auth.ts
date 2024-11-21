@@ -1,9 +1,9 @@
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getServerSession, type User } from "next-auth";
+import { getServerSession, type User, AuthOptions } from "next-auth";
 
-export const authOptions = {
+export const authOptions:AuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_ID as string,
@@ -20,8 +20,6 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        console.log('8888888888888888')
-        console.log(credentials)
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
@@ -42,14 +40,13 @@ export const authOptions = {
           }
 
           const data = await response.json();
-          console.log(data);
           if (data?.data?.token) {
             return {
               id: data.data.user.id.toString(),
-              // name: data.data.user.name,
-              // email: data.data.user.email,
+              name: data.data.user.username,
+              email: data.data.user.email,
               token: data.data.token,
-              // user: data.data.user
+              user: data.data.user,
             };
           }
           return null;
@@ -59,6 +56,9 @@ export const authOptions = {
       },
     }),
   ],
+  session: {
+    strategy: "jwt",
+  },
   callbacks: {
     async jwt({ token, user }: any) {
       if (user) {

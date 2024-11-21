@@ -1,5 +1,6 @@
 import axios, { type AxiosRequestConfig } from "axios";
 import cookie from "js-cookie";
+import { authOptions, getAuthSession } from "@/utils/auth";
 
 const apiClient = axios.create({
   baseURL: process.env.API_BASE_URL,
@@ -19,10 +20,11 @@ interface FcResponse<T> {
 
 // 请求拦截器
 apiClient.interceptors.request.use(
-  (config) => {
+  async(config) => {
     // 客户端才修改请求头
     if (typeof window !== "undefined") {
-      config.headers.authorization = cookie.get("token");
+      const session = await getAuthSession();
+      session&&(config.headers.authorization = session.accessToken);
     }
     config.headers["Cache-Control"] = "no-cache";
     return config;
