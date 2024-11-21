@@ -6,8 +6,8 @@ import { articleListItemType } from "@/types/article";
 const Card = ({ item, key }: { item: articleListItemType; key: string }) => {
   return (
     <div
-      className=" mx-auto bg-white cursor-pointer
-     gap-y-4 hover:bg-slate-100 dark:hover:bg-gray-800   bg-white rounded-lg shadow-md overflow-hidden  ring-1 ring-slate-500/5"
+      className=" mx-auto  cursor-pointer
+     gap-y-4 hover:bg-slate-100 dark:hover:bg-gray-800  rounded-lg shadow-md overflow-hidden  ring-1 ring-slate-500/5"
     >
       <div className="md:flex">
         <div className="md:shrink-0">

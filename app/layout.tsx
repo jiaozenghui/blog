@@ -33,10 +33,7 @@ export default function RootLayout({
         <AuthProvider>
           <AudioProvider>
             <body className={`${manrope.className}`}>
-              <Navbar />
-              <div className="max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
-                {children}
-              </div>
+              {children}
             </body>
           </AudioProvider>
         </AuthProvider>
