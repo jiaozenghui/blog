@@ -1,13 +1,10 @@
 import {NextResponse} from 'next/server'
-import {getToken} from "next-auth/jwt"
-
+import { getAuthSession } from "@/utils/auth";
 export default async function checkAuth(req:any) {
     //获取token
-    const session = await getToken({
-        req
-    })
+    const session = await getAuthSession()
     //未授权，跳转到登录页面
-    if (!session) {
+    if (!session ) {
         return NextResponse.redirect("http://localhost:3000/sign-in")
     } else {
         NextResponse.next()
