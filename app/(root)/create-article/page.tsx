@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import dynamic from 'next/dynamic'; 
+import dynamic from 'next/dynamic';
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -24,10 +24,10 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
-import { useState,useRef} from "react"
+import { useState, useRef } from "react"
 import { Textarea } from "@/components/ui/textarea"
 // import GeneratePodcast from "@/components/GeneratePodcast"
-//import GenerateThumbnail from "@/components/GenerateThumbnail"
+import GenerateThumbnail from "@/components/GenerateThumbnail"
 import { Loader } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 // import { useMutation } from "convex/react"
@@ -35,7 +35,7 @@ import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react";
 import LoaderSpinner from '@/components/LoaderSpinner';
 
-
+type UploadStatus = 'ready' | 'loading' | 'success' | 'error'
 export interface UploadFile {
   uid: string
   size: number
@@ -56,9 +56,9 @@ const formSchema = z.object({
 })
 
 const AIEditor = dynamic(() => import("@/components/AIEditor"), {
-    ssr: false,
-    loading: () => <LoaderSpinner style={{ margin: "0 0 0 10px" }} />,
-  });
+  ssr: false,
+  loading: () => <LoaderSpinner style={{ margin: "0 0 0 10px" }} />,
+});
 
 
 const CreatePodcast = () => {
@@ -92,7 +92,7 @@ const CreatePodcast = () => {
     defaultValues: {
       title: "",
       desc: "",
-      coverImg:""
+      coverImg: ""
     },
   })
 
@@ -102,81 +102,9 @@ const CreatePodcast = () => {
   }
   if (status === 'loading') { return <LoaderSpinner /> }
 
-  const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-
-    try {
-      const files = e.target.files;
-      if (!files) return;
-      const file = files[0];
-      const blob = await file.arrayBuffer()
-      .then((ab) => new Blob([ab]));
-
-      handleImage(blob, file.name);
-    } catch (error) {
-      console.log(error)
-      toast({ title: 'Error uploading image', variant: 'destructive'})
-    }
-  }
 
 
-  const handleImage = async (blob: Blob, fileName: string) => {
-    setIsImageLoading(true);
-    //setImage('');
 
-    try {
-      const file = new File([blob], fileName, { type: 'image/png' });
-
-      const uploaded = await startUpload([file]);
-      const storageId = (uploaded[0].response as any).storageId;
-
-      setImageStorageId(storageId);
-
-      const imageUrl = await getImageUrl({ storageId });
-      //setImage(imageUrl!);
-      setIsImageLoading(false);
-      toast({
-        title: "Thumbnail generated successfully",
-      })
-    } catch (error) {
-      console.log(error)
-      toast({ title: 'Error generating thumbnail', variant: 'destructive'})
-    }
-  }
-
-  const postFile= async(readyFile: UploadFile)=>{
-    const formData = new FormData()
-    formData.append(props.name, readyFile.raw)
-
-    let res: AxiosResponse | null = null
-    try {
-        //上传相同的文件，onchange事件不会被出发，需要上传完成后，重置value
-        if(fileInputRef.value) {
-            fileInputRef.value.value = ''
-        }
-
-        readyFile.status = 'loading'
-        res= await axios.post(props.action, formData, {
-            headers: props.headers,
-            withCredentials: props.withCredentials
-        })
-        
-    } catch (e) {
-        readyFile.status = 'error'
-
-    } finally {
-        if(fileInputRef.value) {
-            fileInputRef.value.value = ''
-        }
-    }
-    if (!res || !res.data) {
-
-        readyFile.status = 'error'
-        return
-    }
-    readyFile.status = 'success'
-    readyFile.resp = res.data
-}
 
 
 
@@ -272,12 +200,11 @@ const CreatePodcast = () => {
                 <FormItem className="flex flex-col gap-2.5">
                   <FormLabel className="text-16 font-bold  ">CoverImg</FormLabel>
                   <FormControl>
-                  <Input 
-                    type="file"
-                    className="hidden"
-                    ref={imageRef}
-                    onChange={(e) => uploadImage(e)}
-                  />
+                    <Input
+                      type="file"
+                      className="hidden"
+                      ref={imageRef}
+                    />
                   </FormControl>
                   <FormMessage className=" " />
                 </FormItem>
@@ -285,11 +212,11 @@ const CreatePodcast = () => {
             />
           </div>
           <div className="flex flex-col pt-10">
-          <AIEditor
-                placeholder="描述代码的作用，支持 Markdown 语法.."
-                style={{ height: 220 }}
-                value={content}
-                onChange={(val) => setContent(val)}
+            <AIEditor
+              placeholder="描述代码的作用，支持 Markdown 语法.."
+              style={{ height: 220 }}
+              value={content}
+              onChange={(val) => setContent(val)}
             />
 
             {/* <GeneratePodcast
@@ -309,6 +236,14 @@ const CreatePodcast = () => {
               imagePrompt={imagePrompt}
               setImagePrompt={setImagePrompt}
             /> */}
+
+            <GenerateThumbnail
+              setImage={setImageUrl}
+              setImageStorageId={setImageStorageId}
+              image={imageUrl}
+              imagePrompt={imagePrompt}
+              setImagePrompt={setImagePrompt}
+            />
 
             <div className="mt-10 w-full">
               <Button type="submit" className="text-16 w-full bg-orange-1 py-4 font-extrabold   transition-all duration-500 hover:bg-black-1">
