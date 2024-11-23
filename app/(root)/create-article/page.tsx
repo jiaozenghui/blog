@@ -34,6 +34,8 @@ import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react";
 import LoaderSpinner from '@/components/LoaderSpinner';
+import {Post} from '@axios'
+import { articleListItemType } from "@/types/article";
 
 type UploadStatus = 'ready' | 'loading' | 'success' | 'error'
 export interface UploadFile {
@@ -57,7 +59,7 @@ const formSchema = z.object({
 
 const AIEditor = dynamic(() => import("@/components/AIEditor"), {
   ssr: false,
-  loading: () => <LoaderSpinner style={{ margin: "0 0 0 10px" }} />,
+  loading: () => <LoaderSpinner  />,
 });
 
 
@@ -70,11 +72,10 @@ const CreatePodcast = () => {
   const [imageStorageId, setImageStorageId] = useState<Id<"_storage"> | null>(null)
   const [imageUrl, setImageUrl] = useState('');
 
-  const [audioUrl, setAudioUrl] = useState('');
+
   const [audioStorageId, setAudioStorageId] = useState<Id<"_storage"> | null>(null)
   const [audioDuration, setAudioDuration] = useState(0);
 
-  const [voiceType, setVoiceType] = useState<string | null>(null);
   const [voicePrompt, setVoicePrompt] = useState('');
 
   const [content, setContent] = useState("");
@@ -109,20 +110,32 @@ const CreatePodcast = () => {
 
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
+    debugger
     try {
       setIsSubmitting(true);
-      if (!audioUrl || !imageUrl || !voiceType) {
+      if (!imageUrl) {
         toast({
-          title: 'Please generate audio and image',
+          title: 'Please generate image',
         })
         setIsSubmitting(false);
-        throw new Error('Please generate audio and image')
+        throw new Error('Please generate image')
       }
 
-      const podcast = {}
-      toast({ title: 'Podcast created' })
-      setIsSubmitting(false);
-      router.push('/')
+      const [e, r] =  await Post<articleListItemType>('api/articles/create', {
+        title: data.title,
+        desc: data.desc,
+        coverImg: imageUrl,
+        content: {
+          htmlContent: content
+        }
+      })
+debugger
+      if (r && r.errno ===0) {
+        toast({ title: 'Podcast created' })
+        setIsSubmitting(false);
+        router.push('/')
+      }
+
     } catch (error) {
       console.log(error);
       toast({
@@ -154,32 +167,6 @@ const CreatePodcast = () => {
               )}
             />
 
-            <div className="flex flex-col gap-2.5">
-              <Label className="text-16 font-bold  ">
-                Select AI Voice
-              </Label>
-
-              <Select onValueChange={(value) => setVoiceType(value)}>
-                <SelectTrigger className={cn('text-16 w-full border-none bg-black-1 text-gray-1 focus-visible:ring-offset-orange-1')}>
-                  <SelectValue placeholder="Select AI Voice" className="placeholder:text-gray-1 " />
-                </SelectTrigger>
-                <SelectContent className="text-16 border-none bg-black-1 font-bold   focus:ring-orange-1">
-                  {voiceCategories.map((category) => (
-                    <SelectItem key={category} value={category} className="capitalize focus:bg-orange-1">
-                      {category}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-                {voiceType && (
-                  <audio
-                    src={`/${voiceType}.mp3`}
-                    autoPlay
-                    className="hidden"
-                  />
-                )}
-              </Select>
-            </div>
-
             <FormField
               control={form.control}
               name="desc"
@@ -200,11 +187,13 @@ const CreatePodcast = () => {
                 <FormItem className="flex flex-col gap-2.5">
                   <FormLabel className="text-16 font-bold  ">CoverImg</FormLabel>
                   <FormControl>
-                    <Input
-                      type="file"
-                      className="hidden"
-                      ref={imageRef}
-                    />
+                  <GenerateThumbnail
+                    setImage={setImageUrl}
+                    setImageStorageId={setImageStorageId}
+                    image={imageUrl}
+                    imagePrompt={imagePrompt}
+                    setImagePrompt={setImagePrompt}
+                  />
                   </FormControl>
                   <FormMessage className=" " />
                 </FormItem>
@@ -237,23 +226,17 @@ const CreatePodcast = () => {
               setImagePrompt={setImagePrompt}
             /> */}
 
-            <GenerateThumbnail
-              setImage={setImageUrl}
-              setImageStorageId={setImageStorageId}
-              image={imageUrl}
-              imagePrompt={imagePrompt}
-              setImagePrompt={setImagePrompt}
-            />
+
 
             <div className="mt-10 w-full">
-              <Button type="submit" className="text-16 w-full bg-orange-1 py-4 font-extrabold   transition-all duration-500 hover:bg-black-1">
+              <Button type="submit" >
                 {isSubmitting ? (
                   <>
                     Submitting
                     <Loader size={20} className="animate-spin ml-2" />
                   </>
                 ) : (
-                  'Submit & Publish Podcast'
+                  'Submit & Publish Post'
                 )}
               </Button>
             </div>

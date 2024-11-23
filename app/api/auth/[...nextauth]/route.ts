@@ -5,12 +5,3 @@ const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
 
-
-export { default } from 'next-auth/middleware';
-
-export const config = {
-  matcher: [
-    '/create-podcast',
-    '/profile',
-  ],
-};

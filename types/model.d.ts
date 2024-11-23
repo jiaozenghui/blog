@@ -56,13 +56,6 @@ declare interface TagAttributes {
     followe_count: number;
     create_time: string;
   }
-  declare interface FollowAttributes {
-    id: number;
-    belong_id: number;
-    user_id: number;
-    create_time: Date;
-  }
-  
   declare interface CommentAttributes {
     id: number;
     belong_id: number;
