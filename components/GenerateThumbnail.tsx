@@ -25,9 +25,9 @@ const GenerateThumbnail = ({
   const imageRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   //const generateUploadUrl = useMutation(api.files.generateUploadUrl);
-  const startUpload = (args: File[]) => {};
-  const getImageUrl = (args: any) => {};
-  const handleGenerateThumbnail = (arg: any) => {};
+  const startUpload = (args: File[]) => { };
+  const getImageUrl = (args: any) => { };
+  const handleGenerateThumbnail = (arg: any) => { };
   let timer: any;
   const handleImage = async (blob: Blob, fileName: string) => {
     setIsImageLoading(true);
@@ -72,7 +72,7 @@ const GenerateThumbnail = ({
     setImage("");
   };
 
-  const generateImage = async (e:Event) => {
+  const generateImage = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     setIsImageLoading(true);
     let data = {
@@ -92,9 +92,9 @@ const GenerateThumbnail = ({
       .then((data: any) => {
         let datas = data.data;
         if (datas && datas.output.task_id) {
-          timer = window.setInterval(function(){
+          timer = window.setInterval(function () {
             poll(datas.output.task_id)
-          },1000) ;
+          }, 3000);
         }
       })
       .catch((err: any) => {

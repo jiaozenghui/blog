@@ -34,8 +34,10 @@ import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react";
 import LoaderSpinner from '@/components/LoaderSpinner';
-import {Post} from '@axios'
+import axios from "axios";
 import { articleListItemType } from "@/types/article";
+import { Result } from 'antd';
+import { authOptions, getAuthSession } from "@/utils/auth";
 
 type UploadStatus = 'ready' | 'loading' | 'success' | 'error'
 export interface UploadFile {
@@ -53,18 +55,18 @@ const voiceCategories = ['alloy', 'shimmer', 'nova', 'echo', 'fable', 'onyx'];
 
 const formSchema = z.object({
   title: z.string().min(2),
-  desc: z.string().min(2),
-  coverImg: z.string().min(2)
+  desc: z.string().min(2)
 })
 
 const AIEditor = dynamic(() => import("@/components/AIEditor"), {
   ssr: false,
-  loading: () => <LoaderSpinner  />,
+  loading: () => <LoaderSpinner />,
 });
 
 
 const CreatePodcast = () => {
-  const { status } = useSession();
+  const { status, data } = useSession();
+  const sessionData = data
   const router = useRouter()
 
   const [isImageLoading, setIsImageLoading] = useState(false);
@@ -93,7 +95,6 @@ const CreatePodcast = () => {
     defaultValues: {
       title: "",
       desc: "",
-      coverImg: ""
     },
   })
 
@@ -108,29 +109,33 @@ const CreatePodcast = () => {
 
 
 
-
   async function onSubmit(data: z.infer<typeof formSchema>) {
+
     debugger
     try {
       setIsSubmitting(true);
-      if (!imageUrl) {
-        toast({
-          title: 'Please generate image',
-        })
-        setIsSubmitting(false);
-        throw new Error('Please generate image')
-      }
+      // if (!imageUrl) {
+      //   toast({
+      //     title: 'Please generate image',
+      //   })
+      //   setIsSubmitting(false);
+      //   throw new Error('Please generate image')
+      // }
 
-      const [e, r] =  await Post<articleListItemType>('api/articles/create', {
+      const results = await axios.post('/api/articles/create', {
         title: data.title,
         desc: data.desc,
         coverImg: imageUrl,
         content: {
           htmlContent: content
         }
+      }, {
+        headers: {
+          Authorization: `Bearer ${sessionData?.accessToken}`,
+        },
       })
-debugger
-      if (r && r.errno ===0) {
+      debugger
+      if (results && results.data) {
         toast({ title: 'Podcast created' })
         setIsSubmitting(false);
         router.push('/')
@@ -180,25 +185,21 @@ debugger
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="desc"
-              render={({ field }) => (
-                <FormItem className="flex flex-col gap-2.5">
-                  <FormLabel className="text-16 font-bold  ">CoverImg</FormLabel>
-                  <FormControl>
-                  <GenerateThumbnail
-                    setImage={setImageUrl}
-                    setImageStorageId={setImageStorageId}
-                    image={imageUrl}
-                    imagePrompt={imagePrompt}
-                    setImagePrompt={setImagePrompt}
-                  />
-                  </FormControl>
-                  <FormMessage className=" " />
-                </FormItem>
-              )}
-            />
+
+            <div className="flex flex-col gap-2.5">
+              <Label className="text-16 font-bold  ">
+                CoverImg
+              </Label>
+
+              <GenerateThumbnail
+                setImage={setImageUrl}
+                setImageStorageId={setImageStorageId}
+                image={imageUrl}
+                imagePrompt={imagePrompt}
+                setImagePrompt={setImagePrompt}
+              />
+            </div>
+
           </div>
           <div className="flex flex-col pt-10">
             <AIEditor
@@ -232,11 +233,11 @@ debugger
               <Button type="submit" >
                 {isSubmitting ? (
                   <>
-                    Submitting
+                    Generating
                     <Loader size={20} className="animate-spin ml-2" />
                   </>
                 ) : (
-                  'Submit & Publish Post'
+                  "Generate"
                 )}
               </Button>
             </div>
