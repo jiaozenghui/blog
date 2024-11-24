@@ -14,6 +14,8 @@ const CardList = async ({ page, cat }: any) => {
   let [err, data] = await Get<ListData<articleListItemType>>(
     "/api/articles/list"
   );
+  console.log('999999999999999999999999999999')
+  console.log(data)
   const POST_PER_PAGE = 2;
 
   // const hasPrev = POST_PER_PAGE * (page - 1) > 0;
@@ -21,9 +23,9 @@ const CardList = async ({ page, cat }: any) => {
 
   return (
     <div className='grid  gap-y-4 ' >
-        {data?.data?.list?.map((item: any) => (
-          <Card item={item} key={item._id} />
-        ))}
+      {data?.data?.list?.map((item: any) => (
+        <Card item={item} key={item._id} />
+      ))}
     </div>
   );
 };

@@ -23,7 +23,7 @@ const Card = ({ item, key }: { item: articleListItemType; key: string }) => {
           <h3 className=" text-xl text-slate-500 font-bold">
             Company retreats
           </h3>
-          <p className="mt-2 text-slate-500 mb-6">
+          <p className="mt-2 line-clamp-3  whitespace-break-spaces mb-6">
             Looking to take your team away on a retreat to enjoy awesome food
             and take in some sunshine? We have a list of places to do just that.
           </p>

@@ -73,7 +73,7 @@ const GenerateThumbnail = ({
   };
 
   const generateImage = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation()
+    e.preventDefault()
     setIsImageLoading(true);
     let data = {
       model: "wanx-v1",
