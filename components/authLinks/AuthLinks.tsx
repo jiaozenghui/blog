@@ -26,7 +26,7 @@ const AuthLinks = () => {
     <>
       {status === "authenticated" ? (
         <>
-          <Link href="/create-article" className={styles.link}>
+          <Link href="/edit-article" className={styles.link}>
             Write
           </Link>
           <span className={styles.link} onClick={() => Logout()}>

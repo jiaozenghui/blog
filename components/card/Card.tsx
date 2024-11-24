@@ -3,8 +3,11 @@ import styles from "./card.module.css";
 import Link from "next/link";
 import { articleListItemType } from "@/types/article";
 import { HeaderActions } from "../HeaderActions";
-
+import { ChevronDown, Circle, Plus, Star } from "lucide-react"
 const Card = ({ item, key }: { item: articleListItemType; key: string }) => {
+
+
+
   return (
     <div
       className=" mx-auto  cursor-pointer
@@ -20,18 +23,25 @@ const Card = ({ item, key }: { item: articleListItemType; key: string }) => {
             alt=""
           />
         </div>
-        <div className="p-4 relative">
-          <h3 className=" flex text-xl text-slate-500 font-bold justify-between">
+        <div className="p-3 relative">
+          <h3 className=" flex text-xl  font-bold justify-between">
             <span>Company retreats</span>
             <HeaderActions />
           </h3>
-          <p className="mt-2 line-clamp-3  whitespace-break-spaces mb-6">
+          <p className="mt-2 line-clamp-3 text-muted-foreground  whitespace-break-spaces mb-6">
             Looking to take your team away on a retreat to enjoy awesome food
             and take in some sunshine? We have a list of places to do just that.
           </p>
-          <div className="absolute inset-x-0 bottom-0  flex items-center justify-end py-3 pr-4 gap-4 content-center">
-            <span className="text-slate-400">User</span>
-            <span className="text-slate-400">2024-03-10 04:27:08</span>
+          <div className="flex space-x-4 text-sm justify-end text-muted-foreground">
+            <div className="flex items-center">
+              <Circle className="mr-1 h-3 w-3 fill-sky-400 text-sky-400" />
+              TypeScript
+            </div>
+            <div className="flex items-center">
+              <Star className="mr-1 h-3 w-3" />
+              20k
+            </div>
+            <div>Updated April 2023</div>
           </div>
         </div>
       </div>
