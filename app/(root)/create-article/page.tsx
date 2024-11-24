@@ -126,15 +126,12 @@ const CreatePodcast = () => {
         title: data.title,
         desc: data.desc,
         coverImg: imageUrl,
-        content: {
-          htmlContent: content
-        }
+        content: content
       }, {
         headers: {
           Authorization: `Bearer ${sessionData?.accessToken}`,
         },
       })
-      debugger
       if (results && results.data) {
         toast({ title: 'Podcast created' })
         setIsSubmitting(false);

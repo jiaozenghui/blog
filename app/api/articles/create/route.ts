@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     const Authorization = request.headers.get("authorization");
     console.log("66666666666666666666666");
     console.log(Authorization);
-    const [e, r] = await Post("api/works/create", body, {
+    const [e, r] = await Post("api/articles/create", body, {
       headers: { Authorization },
     });
     console.log("sdgfheprk;ghe;r");

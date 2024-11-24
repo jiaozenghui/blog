@@ -12,7 +12,7 @@ import { type ListData } from "axios";
 
 const CardList = async ({ page, cat }: any) => {
   let [err, data] = await Get<ListData<articleListItemType>>(
-    "/api/works/templist"
+    "/api/articles/list"
   );
   const POST_PER_PAGE = 2;
 
