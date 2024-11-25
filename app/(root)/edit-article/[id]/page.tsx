@@ -1,7 +1,6 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { useEffect } from "react";
 import { z } from "zod"
 import dynamic from 'next/dynamic';
 import { Button } from "@/components/ui/button"
@@ -38,6 +37,9 @@ import axios from "axios";
 import { articleListItemType } from "@/types/article";
 import { Result } from 'antd';
 import { authOptions, getAuthSession } from "@/utils/auth";
+import useFetch from "@/common/hooks/useFetch";
+import useUserWriteArticle from "@/store/user/article-create";
+
 
 type UploadStatus = 'ready' | 'loading' | 'success' | 'error'
 export interface UploadFile {
@@ -65,93 +67,36 @@ const AIEditor = dynamic(() => import("@/components/AIEditor"), {
 
 
 const CreatePodcast = ({ params: { id } }: { params: { id: string } }) => {
-    const { status, data } = useSession();
-    const sessionData = data
-    const router = useRouter()
+    let updateData = useUserWriteArticle((s) => s.updateData);
 
-    const [isImageLoading, setIsImageLoading] = useState(false);
-    const [imagePrompt, setImagePrompt] = useState('');
-    const [imageStorageId, setImageStorageId] = useState<Id<"_storage"> | null>(null)
-    const [imageUrl, setImageUrl] = useState('');
-
-
-    const [audioStorageId, setAudioStorageId] = useState<Id<"_storage"> | null>(null)
-    const [audioDuration, setAudioDuration] = useState(0);
-
-    const [voicePrompt, setVoicePrompt] = useState('');
-
-    const [content, setContent] = useState("");
-
-    const [isSubmitting, setIsSubmitting] = useState(false);
-
-    // const createPodcast = useMutation(api.podcasts.createPodcast)
-
-    const imageRef = useRef<HTMLInputElement>(null);
-
-    const { toast } = useToast()
-    // 1. Define your form.
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            title: "",
-            desc: "",
-        },
-    })
-
-
-    if (status === 'unauthenticated') {
-        return router.push("/");
-    }
-    if (status === 'loading') { return <LoaderSpinner /> }
-
-
-
-
-
-
-    async function onSubmit(data: z.infer<typeof formSchema>) {
-
-        debugger
-        try {
-            setIsSubmitting(true);
-            // if (!imageUrl) {
-            //   toast({
-            //     title: 'Please generate image',
-            //   })
-            //   setIsSubmitting(false);
-            //   throw new Error('Please generate image')
-            // }
-
-            const results = await axios.post('/api/articles/create', {
-                title: data.title,
-                desc: data.desc,
-                coverImg: imageUrl,
-                content: content
-            }, {
-                headers: {
-                    Authorization: `Bearer ${sessionData?.accessToken}`,
-                },
-            })
-            if (results && results.data) {
-                toast({ title: 'Podcast created' })
-                setIsSubmitting(false);
-                router.push('/')
-            }
-
-        } catch (error) {
-            console.log(error);
-            toast({
-                title: 'Error',
-                variant: 'destructive',
-            })
-            setIsSubmitting(false);
+    let { data, isLoading, refetch } = useFetch(() =>
+        axios.get(`/article/${id}?update=md`).then((res) => res.data.data),
+    );
+    // 为状态设置值
+    useEffect(() => {
+        if (data) {
+            let {
+                title,
+                content,
+                reprint,
+                desc,
+                cover_url,
+                theme_id,
+            } = data;
+            updateData({
+                title,
+                content,
+                reprint,
+                desc,
+                cover_url,
+                theme_id,
+            });
         }
-    }
+    }, [updateData, data]);
 
     return (
         <section className="mt-10 flex flex-col">
             <h1 className="text-20 font-bold  ">Create Podcast</h1>
-
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="mt-12 flex w-full flex-col">
                     <div className="flex flex-col gap-[30px] border-b border-black-5 pb-10">
