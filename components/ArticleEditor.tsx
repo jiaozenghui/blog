@@ -4,13 +4,8 @@ import { useEffect } from "react";
 import { FC, ReactNode } from "react";
 import { Avatar, Button, Dropdown, Input, Result } from "antd";
 import { SmileOutlined } from "@ant-design/icons";
-import Base from "@/layout/Base";
-import Head from "@/components/next/Head";
-import useUserData from "@/store/user/user-data";
-import useUserWriteArticle from "@/store/user/user-write-article";
-import Editor from "../Editor";
-import DraftsButton from "./DraftsButton";
-import Modal from "./Modal";
+
+import useUserWriteArticle from "@/store/user/article-create";
 
 export const initValue = {
     title: "",
@@ -39,7 +34,7 @@ interface propsType {
 }
 export type modalPropsType = Pick<propsType, "submit">;
 const ArticleEditor: FC<propsType> = (props) => {
-    let userData = useUserData((s) => s.data);
+
     let articleData = useUserWriteArticle((s) => s.data);
     let updateData = useUserWriteArticle((s) => s.updateData);
     let resetArticleData = useUserWriteArticle((s) => s.resetData);
@@ -50,47 +45,100 @@ const ArticleEditor: FC<propsType> = (props) => {
         };
     }, [resetArticleData]);
 
-    return userData ? (
-        <div className="w-full">
-            {props.meta}
-            <header className="flex h-12 items-center justify-between">
-                <Input
-                    placeholder="输入文章标题..."
-                    value={articleData.title}
-                    variant="borderless"
-                    className="mr-10 h-full"
-                    onChange={(e) => updateData({ title: e.target.value })}
-                    maxLength={200}
-                />
-                <div className="mr-5 flex">
-                    {props.showDraftsButton && <DraftsButton />}
-                    <Dropdown
-                        trigger={["click"]}
-                        dropdownRender={() => <Modal {...props} />}
-                    >
-                        <Button type="primary" className="mx-4">
-                            发布
-                        </Button>
-                    </Dropdown>
-                    <Avatar src={userData.avatar_url} alt="头像" />
-                </div>
-            </header>
-            <Editor
-                theme={true}
-                target="article"
-                initValue={articleData.content}
-                onChange={(html) => updateData({ content: html })}
-                defaultTheme={articleData.theme_id}
-                onSetTheme={(id) => updateData({ theme_id: id })}
-            />
-        </div>
-    ) : (
-        <Base className="bg-white">
-            <div className="flex w-full justify-center">
-                <Head title="请登录" />
-                <Result icon={<SmileOutlined />} title="请登录后再发布文章" />
-            </div>
-        </Base>
-    );
+
+    return (
+        <section className="mt-10 flex flex-col">
+            <h1 className="text-20 font-bold  ">Create Podcast</h1>
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="mt-12 flex w-full flex-col">
+                    <div className="flex flex-col gap-[30px] border-b border-black-5 pb-10">
+                        <FormField
+                            control={form.control}
+                            name="title"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col gap-2.5">
+                                    <FormLabel className="text-16 font-bold  ">Title</FormLabel>
+                                    <FormControl>
+                                        <Input className="input-class focus-visible:ring-offset-orange-1" placeholder="JSM Pro Podcast" {...field} />
+                                    </FormControl>
+                                    <FormMessage className=" " />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="desc"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col gap-2.5">
+                                    <FormLabel className="text-16 font-bold  ">Description</FormLabel>
+                                    <FormControl>
+                                        <Textarea className="input-class focus-visible:ring-offset-orange-1" placeholder="Write a short podcast description" {...field} />
+                                    </FormControl>
+                                    <FormMessage className=" " />
+                                </FormItem>
+                            )}
+                        />
+
+                        <div className="flex flex-col gap-2.5">
+                            <Label className="text-16 font-bold  ">
+                                CoverImg
+                            </Label>
+
+                            <GenerateThumbnail
+                                setImage={setImageUrl}
+                                setImageStorageId={setImageStorageId}
+                                image={imageUrl}
+                                imagePrompt={imagePrompt}
+                                setImagePrompt={setImagePrompt}
+                            />
+                        </div>
+
+                    </div>
+                    <div className="flex flex-col pt-10">
+                        <AIEditor
+                            placeholder="描述代码的作用，支持 Markdown 语法.."
+                            style={{ height: 220 }}
+                            value={content}
+                            onChange={(val) => setContent(val)}
+                        />
+
+                        {/* <GeneratePodcast
+                    setAudioStorageId={setAudioStorageId}
+                    setAudio={setAudioUrl}
+                    voiceType={voiceType!}
+                    audio={audioUrl}
+                    voicePrompt={voicePrompt}
+                    setVoicePrompt={setVoicePrompt}
+                    setAudioDuration={setAudioDuration}
+                    />
+
+                    <GenerateThumbnail
+                    setImage={setImageUrl}
+                    setImageStorageId={setImageStorageId}
+                    image={imageUrl}
+                    imagePrompt={imagePrompt}
+                    setImagePrompt={setImagePrompt}
+                    /> */}
+
+
+
+                        <div className="mt-10 w-full">
+                            <Button type="submit" >
+                                {isSubmitting ? (
+                                    <>
+                                        Generating
+                                        <Loader size={20} className="animate-spin ml-2" />
+                                    </>
+                                ) : (
+                                    "Generate"
+                                )}
+                            </Button>
+                        </div>
+                    </div>
+                </form>
+            </Form>
+        </section>
+    )
 };
 export default ArticleEditor;
