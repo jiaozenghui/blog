@@ -48,6 +48,20 @@ const nextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/api/articles/:path*",
+        destination: `${process.env.API_BASE_URL}/api/articles/:path*`,
+        basePath: false
+      }
+    ]
+  },
+  publicRuntimeConfig: {
+    env: {
+      LOCAL_PREFIX: JSON.stringify(process.env.npm_package_name),
+    },
+  },
 };
 
 export default nextConfig;

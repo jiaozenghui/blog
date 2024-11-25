@@ -49,7 +49,7 @@ export function HeaderActions({ className, ...props }: CardProps) {
                   </span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href="/edit-article" >
+                  <Link href="/edit-article/3" >
                     Write
                   </Link></DropdownMenuItem>
               </DropdownMenuContent>

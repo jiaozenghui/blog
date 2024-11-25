@@ -1,9 +1,10 @@
 import axios, { type AxiosRequestConfig } from "axios";
 import cookie from "js-cookie";
 import { authOptions, getAuthSession } from "@/utils/auth";
-
+import { useSession } from "next-auth/react"
+import { Local } from "./storage";
 const apiClient = axios.create({
-  baseURL: process.env.API_BASE_URL,
+  ...(typeof window !== "undefined"?{}:{baseURL: process.env.API_BASE_URL}),
 });
 
 type Fn = (data: FcResponse<any>) => unknown;
@@ -20,11 +21,13 @@ interface FcResponse<T> {
 
 // 请求拦截器
 apiClient.interceptors.request.use(
-  async(config) => {
+  (config) => {
     // 客户端才修改请求头
+    
     if (typeof window !== "undefined") {
-      const session = await getAuthSession();
-      session&&(config.headers.authorization = session.accessToken);
+      const token = window.localStorage.getItem('next:storage')
+
+      token&&(config.headers['authorization'] = token);
     }
     config.headers["Cache-Control"] = "no-cache";
     return config;

@@ -122,7 +122,7 @@ const CreatePodcast = () => {
       //   throw new Error('Please generate image')
       // }
 
-      const results = await axios.post('/api/articles/create', {
+      const results = await axios.post('/ apis/articles/create', {
         title: data.title,
         desc: data.desc,
         coverImg: imageUrl,

@@ -27,6 +27,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import { Local } from "@/plugin/storage";
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
@@ -34,9 +35,16 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
 
   const { toast } = useToast()
-  const { status } = useSession();
+  const { status, data:session } = useSession();
   const router = useRouter();
 
+  const [accessToken, setAccessToken] = React.useState(null);
+ 
+  React.useEffect(() => {
+    if (session) {
+      console.log(session)
+    }
+  }, [session]);
 
   if (status === "authenticated") {
     router.push("/")
@@ -74,6 +82,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         })
       }
     } else {
+      Local.set('token', session?.accessToken)
       toast({
         title: '登录成功!'
       })
