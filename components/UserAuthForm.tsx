@@ -35,11 +35,11 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
 
   const { toast } = useToast()
-  const { status, data:session } = useSession();
+  const { status, data: session } = useSession();
   const router = useRouter();
 
   const [accessToken, setAccessToken] = React.useState(null);
- 
+  console.log('test666666666666666666666666')
   React.useEffect(() => {
     if (session) {
       console.log(session)

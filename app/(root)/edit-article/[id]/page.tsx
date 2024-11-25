@@ -10,7 +10,7 @@ import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react";
 import LoaderSpinner from '@/components/LoaderSpinner';
-import axios, {Get} from "@axios";
+import axios, { Get } from "@axios";
 import { articleListItemType } from "@/types/article";
 import { Result } from 'antd';
 import { authOptions, getAuthSession } from "@/utils/auth";
@@ -44,51 +44,52 @@ const AIEditor = dynamic(() => import("@/components/AIEditor"), {
 });
 
 
-const CreatePodcast = ({ params: { id } }: { params: { id: string } }) => {
+const EditArticle = ({ params: { id } }: { params: { id: string } }) => {
+    debugger
     let updateData = useUserWriteArticle((s) => s.updateData);
-    // let { data, isLoading, refetch } = useFetch(() =>
-    //     axios.get(`/api/articles/${id}`).then((res) => res.data.data),
-    // );
+    let { data, isLoading, refetch } = useFetch(() =>
+        axios.get(`/api/articles/${id}`).then((res) => res.data.data),
+    );
 
 
-    // 为状态设置值
-    // useEffect(() => {
-    //     if (data) {
-    //         let {
-    //             title,
-    //             content,
-    //             reprint,
-    //             desc,
-    //             cover_url,
-    //             theme_id,
-    //         } = data;
-    //         updateData({
-    //             title,
-    //             content,
-    //             reprint,
-    //             desc,
-    //             cover_url,
-    //             theme_id,
-    //         });
-    //     }
-    // }, [updateData, data]);
+    //为状态设置值
+    useEffect(() => {
+        if (data) {
+            let {
+                title,
+                content,
+                reprint,
+                desc,
+                cover_url,
+                theme_id,
+            } = data;
+            updateData({
+                title,
+                content,
+                reprint,
+                desc,
+                cover_url,
+                theme_id,
+            });
+        }
+    }, [updateData, data]);
 
     return (
-        <ArticleEditor 
-        articleId={id}
+        <ArticleEditor
+            articleId={id}
             submit={(values) => {
                 axios
-                .put(`/article/${id}`, { ...values, state: 1 })
-                .then((res) => {
+                    .put(`/article/${id}`, { ...values, state: 1 })
+                    .then((res) => {
 
-                    //refetch();
-                })
-                .catch((err) => {
+                        //refetch();
+                    })
+                    .catch((err) => {
 
-                });
+                    });
             }}
         />
     )
 }
 
-export default CreatePodcast
+export default EditArticle

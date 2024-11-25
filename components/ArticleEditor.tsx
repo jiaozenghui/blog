@@ -29,7 +29,7 @@ import GenerateThumbnail from "@/components/GenerateThumbnail"
 import { Loader } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import useUserWriteArticle from "@/store/user/article-create";
-import axios, {Get} from "@axios";
+import axios, { Get } from "@axios";
 
 export const initValue = {
     title: "",
@@ -57,7 +57,7 @@ interface propsType {
 }
 export type modalPropsType = Pick<propsType, "submit">;
 const ArticleEditor: FC<propsType> = (props) => {
-    
+
 
 
     let articleData = useUserWriteArticle((s) => s.data);
@@ -66,14 +66,14 @@ const ArticleEditor: FC<propsType> = (props) => {
 
     useEffect(() => {
         async function fetchPosts() {
-            const [e,r] = await Get(`/api/articles/${props.articleId}`)
+            const [e, r] = await Get(`/api/articles/${props.articleId}`)
         }
-        fetchPosts()
+        // fetchPosts()
         return () => {
             resetArticleData();
-            fetchPosts()
+            //fetchPosts()
         };
-        
+
     }, [resetArticleData]);
 
 
